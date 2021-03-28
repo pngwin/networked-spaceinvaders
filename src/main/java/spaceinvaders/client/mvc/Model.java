@@ -19,6 +19,9 @@ public interface Model extends Service<Void> {
   /** Exit the game.*/
   public void exitGame();
 
+  /** Enables cheats for a client */
+  public void enableCheats();
+
   /**
    * @return true if the game is on, false otherwise.
    */

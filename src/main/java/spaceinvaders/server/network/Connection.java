@@ -107,7 +107,7 @@ public class Connection implements Service<Void> {
 
   /**
    * Unwrap an UDP packet and put it in the {@code incomingCommandQueue}.
-   * 
+   *
    * @throws NullPointerException if argument is {@code null}.
    */
   public void unwrapPacket(DatagramPacket packet) {
@@ -173,7 +173,7 @@ public class Connection implements Service<Void> {
 
   /**
    * Add an UDP sender to the chain.
-   * 
+   *
    * @param port the port of the remote client, where UDP packets should be sent.
    */
   public void setUdpChain(int port) {

@@ -13,6 +13,9 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TransferQueue;
 import java.util.logging.Logger;
 import spaceinvaders.client.network.NetworkConnection;
+import spaceinvaders.client.ClientConfig;
+import spaceinvaders.game.GameConfig;
+import spaceinvaders.server.game.GameLoop;
 import spaceinvaders.command.Command;
 import spaceinvaders.command.CommandDirector;
 import spaceinvaders.command.client.ClientCommandBuilder;
@@ -29,7 +32,6 @@ import spaceinvaders.utility.ServiceState;
  */
 public class GameModel implements Model {
   private static final Logger LOGGER = Logger.getLogger(GameModel.class.getName());
-
   private final TransferQueue<String> incomingQueue = new LinkedTransferQueue<>();
   private final CommandDispatcher dispatcher = new CommandDispatcher();
   private final ExecutorService connectionExecutor = Executors.newSingleThreadExecutor();
@@ -59,6 +61,7 @@ public class GameModel implements Model {
     Future<?> connectionFuture = connectionExecutor.submit(connection);
     final long checkingRateMilliseconds = 500;
     connectionState.set(true);
+
     while (connectionState.get()) {
       try {
         if (connectionFuture.isDone()) {
@@ -118,6 +121,12 @@ public class GameModel implements Model {
   }
 
   @Override
+  public void enableCheats(){
+    ClientConfig clientConfig = ClientConfig.getInstance();
+    System.out.println("[DEBUG] Player " + clientConfig.getUserName() +" has toggled cheating.");
+  }
+
+  @Override
   public boolean getGameState() {
     return gameState.get();
   }
@@ -139,7 +148,7 @@ public class GameModel implements Model {
   private class CommandDispatcher extends Observable implements Service<Void> {
     private final ServiceState state = new ServiceState();
 
-    /** 
+    /**
      * Start deserializing and forwarding data.
      *
      * @throws InterruptedException if the service is interrupted prior to shutdown.

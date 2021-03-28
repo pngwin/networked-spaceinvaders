@@ -33,9 +33,9 @@ public class GameLoop implements Service<Void> {
   private static final int GUARD_PIXELS = 32;
 
   private final GameConfig config = GameConfig.getInstance();
-  private final AutoSwitch invadersMovement = new AutoSwitch(config.speed().invader().getRate()); 
-  private final AutoSwitch bulletsMovement = new AutoSwitch(config.speed().bullet().getRate()); 
-  private final AutoSwitch invadersShooting = new AutoSwitch(); 
+  private final AutoSwitch invadersMovement = new AutoSwitch(config.speed().invader().getRate());
+  private final AutoSwitch bulletsMovement = new AutoSwitch(config.speed().bullet().getRate());
+  private final AutoSwitch invadersShooting = new AutoSwitch();
   private final List<Future<?>> future = new ArrayList<>();
   private final List<Command> commandBuf = new ArrayList<>();
   private final List<Player> team;
@@ -133,6 +133,7 @@ public class GameLoop implements Service<Void> {
     while (it.hasNext()) {
       LogicEntity player = it.next();
       if (player.getId() == id) {
+        //System.out.println(config.speed().player().getDistance());
         movePlayer(player,player.getX() - config.speed().player().getDistance());
       }
     }
@@ -159,6 +160,10 @@ public class GameLoop implements Service<Void> {
     if (newX >= GUARD_PIXELS && newX <= frameW - playerW - GUARD_PIXELS) {
       moveEntity(player,newX,player.getY());
     }
+  }
+
+  public void toggleCheat(){
+    config.toggleCheat();
   }
 
   private void moveEntity(LogicEntity entity, int newX, int newY) {

@@ -1,0 +1,15 @@
+Artificial Network Delay (4 marks)
+
+Bucket Sychronization (6 marks)
+
+Interest Management (6 marks)
+
+Dead Reckoning (6 marks)
+
+Smooth Corrections (6 marks)
+
+Cheating (4 marks)
+  > GameController.java
+Cheating Detection (4 Marks)
+
+Code Style and Readability (4 marks)

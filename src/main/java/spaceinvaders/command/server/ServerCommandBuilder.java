@@ -9,6 +9,7 @@ public class ServerCommandBuilder extends CommandBuilder {
     super(new ConfigurePlayerCommand(),
           new MovePlayerLeftCommand(),
           new MovePlayerRightCommand(),
+          new ToggleCheatCommand(),
           new PlayerShootCommand());
   }
 }

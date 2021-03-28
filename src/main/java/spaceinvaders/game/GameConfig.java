@@ -13,6 +13,10 @@ public class GameConfig {
   private static final transient Logger LOGGER = Logger.getLogger(GameConfig.class.getName());
   private static transient GameConfig singleton;
 
+  private static boolean cheatsOn = false;
+  private final int playerSpeedHackMultiplier = 5;
+  private final int bulletSpeedHackMultiplier = 3;
+
   private Map<EntityEnum,EntityConfig> entityMap;
   private Boolean predictable;
   private Integer invaderRows;
@@ -94,6 +98,26 @@ public class GameConfig {
     return getFromMap(EntityEnum.PLAYER_BULLET);
   }
 
+  // Operates directly on game configuration file to enable cheating
+  public void toggleCheat()
+  {
+    if (!cheatsOn){
+      cheatsOn = true;
+
+      // increase player and projectile speed
+      speed.player.setDistance(new Integer(speed.player.getDistance() * playerSpeedHackMultiplier));
+      speed.bullet.setDistance(new Integer(speed.bullet.getDistance() * bulletSpeedHackMultiplier));
+    }
+    else
+    {
+      cheatsOn = false;
+
+      // revert player and bullet speed cheats
+      speed.player.setDistance(new Integer(speed.player.getDistance() / playerSpeedHackMultiplier));
+      speed.bullet.setDistance(new Integer(speed.bullet.getDistance() / bulletSpeedHackMultiplier));
+    }
+  }
+
   private EntityConfig getFromMap(EntityEnum type) {
     EntityConfig conf = entityMap.get(type);
     if (conf == null) {
@@ -138,6 +162,14 @@ public class GameConfig {
 
     public int getRate() {
       return rate;
+    }
+
+    public void setDistance(Integer d){
+      distance = d;
+    }
+
+    public void setRate(Integer r){
+      rate = r;
     }
   }
 

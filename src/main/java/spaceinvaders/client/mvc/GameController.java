@@ -4,6 +4,7 @@ import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_C;
 import static java.util.logging.Level.SEVERE;
 
 import java.awt.event.ActionEvent;
@@ -20,9 +21,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import spaceinvaders.client.ClientConfig;
 import spaceinvaders.command.Command;
-import spaceinvaders.command.server.MovePlayerLeftCommand;
-import spaceinvaders.command.server.MovePlayerRightCommand;
-import spaceinvaders.command.server.PlayerShootCommand;
+import spaceinvaders.command.server.*;
 import spaceinvaders.exceptions.IllegalPortNumberException;
 import spaceinvaders.exceptions.InvalidServerAddressException;
 import spaceinvaders.exceptions.InvalidUserNameException;
@@ -60,8 +59,9 @@ public class GameController implements Controller {
           new KeyPressListener(
           new MoveLeftListener(
           new MoveRightListener(
+          new ToggleCheatListener(
           new ShootListener(
-          new QuitGameListener(null))))));
+          new QuitGameListener(null)))))));
       views.add(view);
     }
   }
@@ -172,7 +172,7 @@ public class GameController implements Controller {
     public KeyPressListener(Chain<KeyEvent> nextChain) {
       this.nextChain = nextChain;
     }
-    
+
     @Override
     public void keyPressed(KeyEvent event) {
       handle(event);
@@ -243,6 +243,34 @@ public class GameController implements Controller {
       this.nextChain = nextChain;
     }
   }
+
+  private class ToggleCheatListener implements Chain<KeyEvent> {
+    private Chain<KeyEvent> nextChain;
+
+    public ToggleCheatListener(Chain<KeyEvent> nextChain) {
+      this.nextChain = nextChain;
+    }
+
+    @Override
+    public void handle(KeyEvent event) {
+      if (event.getKeyCode() == VK_C) {
+        if (model.getGameState()) {
+          model.enableCheats();
+          model.doCommand(new ToggleCheatCommand(ClientConfig.getInstance().getId()));
+        }
+      } else {
+        if (nextChain != null) {
+          nextChain.handle(event);
+        }
+      }
+    }
+
+    @Override
+    public void setNext(Chain<KeyEvent> nextChain) {
+      this.nextChain = nextChain;
+    }
+  }
+
 
   /** Player shoots a bullet. */
   private class ShootListener implements Chain<KeyEvent> {
