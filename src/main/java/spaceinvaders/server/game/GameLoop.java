@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import spaceinvaders.command.Command;
 import spaceinvaders.command.client.ChangeScoreCommand;
 import spaceinvaders.command.client.GameOverCommand;
@@ -133,7 +135,7 @@ public class GameLoop implements Service<Void> {
     while (it.hasNext()) {
       LogicEntity player = it.next();
       if (player.getId() == id) {
-        //System.out.println(config.speed().player().getDistance());
+        detectCheats(player);
         movePlayer(player,player.getX() - config.speed().player().getDistance());
       }
     }
@@ -149,6 +151,7 @@ public class GameLoop implements Service<Void> {
     while (it.hasNext()) {
       LogicEntity player = it.next();
       if (player.getId() == id) {
+        detectCheats(player);
         movePlayer(player,player.getX() + config.speed().player().getDistance());
       }
     }
@@ -161,6 +164,18 @@ public class GameLoop implements Service<Void> {
       moveEntity(player,newX,player.getY());
     }
   }
+
+  private void detectCheats(LogicEntity player) {
+
+    boolean isPlayerCheating = Math.abs(player.getX() - (player.getX() + config.speed().player().getDistance())) > config.getDefaultPlayerSpeed() ? true : false;
+
+    if (isPlayerCheating)
+    {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
+        System.out.println("[" + df.format(LocalDateTime.now()) + "]: Server has detected CHEATING!");
+    }
+  }
+
 
   public void toggleCheat(){
     config.toggleCheat();

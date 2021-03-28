@@ -17,6 +17,9 @@ public class GameConfig {
   private final int playerSpeedHackMultiplier = 5;
   private final int bulletSpeedHackMultiplier = 3;
 
+  private static int defaultPlayerSpeed;
+  private static int defaultBulletSpeed;
+
   private Map<EntityEnum,EntityConfig> entityMap;
   private Boolean predictable;
   private Integer invaderRows;
@@ -33,6 +36,12 @@ public class GameConfig {
     if (singleton == null) {
       try {
         singleton = readConfig();
+
+        // grab config values on load-up
+        defaultPlayerSpeed = singleton.speed.player.distance;
+        defaultBulletSpeed = singleton.speed.bullet.distance;
+
+        //System.out.println("Default Player Speed: " + defaultPlayerSpeed + "\nDefault Bullet Speed: " + defaultBulletSpeed);
       } catch (IOException ioExcepiton) {
         LOGGER.log(SEVERE,ioExcepiton.toString(),ioExcepiton);
       }
@@ -56,6 +65,16 @@ public class GameConfig {
 
   public FrameConfig frame() {
     return frame;
+  }
+
+  public int getDefaultPlayerSpeed()
+  {
+    return defaultPlayerSpeed;
+  }
+
+  public int getDefaultBulletSpeed()
+  {
+    return defaultBulletSpeed;
   }
 
   public Speed speed() {
