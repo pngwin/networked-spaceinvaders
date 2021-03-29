@@ -157,7 +157,7 @@ class Game implements Service<Void> {
 
     LOGGER.info("Game " + hashCode() + " terminated");
 
-    return null; 
+    return null;
   }
 
   /** Close the connections of all players in the team and stop all running subtasks.*/

@@ -18,7 +18,7 @@ import spaceinvaders.utility.ServiceState;
 /**
  * Manages all players.
  *
- * <p>Wraps a {@link spaceinvaders.server.network.Connection} into a 
+ * <p>Wraps a {@link spaceinvaders.server.network.Connection} into a
  * {@link spaceinvaders.server.player.Player} and forwards it to the
  * {@link spaceinvaders.server.game.GameManager}.
  *
@@ -95,7 +95,7 @@ public class PlayerManager extends Observable implements Observer, Service<Void>
         player.close();
       }
     }
-    return null; 
+    return null;
   }
 
   @Override

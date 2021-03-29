@@ -1,7 +1,9 @@
 package spaceinvaders.server.player;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import spaceinvaders.command.Command;
@@ -15,6 +17,12 @@ public class Player {
   private final Future<Void> connectionFuture;
   private String name;
   private Integer teamSize;
+
+  // base artificial network delay timer (ms)
+  private int rttDelay = 100;
+
+  // delay variance
+  private int variance = 20;
 
   /**
    * Wrap a player around the specified connection.
@@ -45,6 +53,15 @@ public class Player {
       throw new NullPointerException();
     }
     connection.send(command);
+  }
+
+  public int performArtificialDelay(){
+    int chosenVariance = new Random().nextInt(variance + 1);
+    int randomOffset = new Random().nextInt(chosenVariance + 1);
+
+    int result = (int) (Math.sin(2 * Math.PI / chosenVariance) * (rttDelay / 2) + (rttDelay / 2)) + randomOffset;
+    System.out.println("[DEBUG] Player " + name + "'s ping is: " + result);
+    return result;
   }
 
   /**

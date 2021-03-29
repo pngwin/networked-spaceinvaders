@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.lang.InterruptedException;
 import java.util.concurrent.Future;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -108,6 +109,14 @@ public class GameLoop implements Service<Void> {
         List<Command> commands = player.pull();
         for (Command command : commands) {
           command.setExecutor(this);
+
+          // simulate network delay 
+          try{
+            Thread.sleep(player.performArtificialDelay());
+          }
+          catch (InterruptedException e){
+
+          }
           command.execute();
         }
       } else {
@@ -167,6 +176,7 @@ public class GameLoop implements Service<Void> {
 
   private void detectCheats(LogicEntity player) {
 
+    // Detects whether the player is moving at a faster pace than they are meant to by default
     boolean isPlayerCheating = Math.abs(player.getX() - (player.getX() + config.speed().player().getDistance())) > config.getDefaultPlayerSpeed() ? true : false;
 
     if (isPlayerCheating)
